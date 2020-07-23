@@ -2,6 +2,8 @@ import { Component, ElementRef, Inject, ViewChild, AfterViewInit } from '@angula
 import { ConferenceData } from '../../providers/conference-data';
 import { Platform } from '@ionic/angular';
 import { DOCUMENT} from '@angular/common';
+import { ModalController} from "@ionic/angular";
+import { SignupPage} from "../signup/signup";
 
 import { darkStyle } from './map-dark-style';
 
@@ -16,7 +18,8 @@ export class MapPage implements AfterViewInit {
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     public confData: ConferenceData,
-    public platform: Platform) {}
+    public platform: Platform,
+    public modalController: ModalController) {}
 
   async ngAfterViewInit() {
     const appEl = this.doc.querySelector('ion-app');
@@ -36,23 +39,25 @@ export class MapPage implements AfterViewInit {
       const mapEle = this.mapElement.nativeElement;
 
       map = new googleMaps.Map(mapEle, {
-        center: mapData.find((d: any) => d.center),
-        zoom: 16,
+        center: {lat: 51, lng: 10},
+        zoom: 7,
         styles: style
       });
 
       mapData.forEach((markerData: any) => {
         const infoWindow = new googleMaps.InfoWindow({
-          content: `<h5>${markerData.name}</h5>`
+          content: `<h5>${markerData.name}</h5> gefahrliche Situation`
         });
 
         const marker = new googleMaps.Marker({
           position: markerData,
           map,
-          title: markerData.name
+          title: markerData.name,
+          icon: 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png'
         });
 
         marker.addListener('click', () => {
+          this.presentModal();
           infoWindow.open(map, marker);
         });
       });
@@ -79,6 +84,18 @@ export class MapPage implements AfterViewInit {
       attributes: true
     });
   }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: SignupPage,
+      componentProps: {
+        foo: 'hello',
+        bar: 'world'
+      }
+    });
+    return await modal.present();
+  }
+
 }
 
 function getGoogleMaps(apiKey: string): Promise<any> {
