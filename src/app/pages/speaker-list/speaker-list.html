@@ -16,6 +16,7 @@
 
   <ion-grid fixed>
     <ion-row>
+      <ion-searchbar (ionChange)='onChangeTime()' placeholder="Suchen..."></ion-searchbar>
       <ion-col size="12" size-md="6" *ngFor="let speaker of speakers">
         <ion-card class="speaker-card">
           <ion-card-header>

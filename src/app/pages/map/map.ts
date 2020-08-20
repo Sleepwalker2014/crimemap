@@ -58,7 +58,7 @@ export class MapPage implements AfterViewInit {
 
         marker.addListener('click', () => {
           this.presentModal();
-          infoWindow.open(map, marker);
+          //infoWindow.open(map, marker);
         });
       });
 

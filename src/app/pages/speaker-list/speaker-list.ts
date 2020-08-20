@@ -16,4 +16,8 @@ export class SpeakerListPage {
       this.speakers = speakers;
     });
   }
+
+  onChangeTime() {
+    this.speakers.pop();
+  }
 }
